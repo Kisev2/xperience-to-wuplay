@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xperience to Wuplay Migrator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #050505;
+            --accent-color: #ffffff;
+            --accent-hover: #e5e5e5;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #222222;
+            --code-bg: #0d0d0d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .bookmark-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-color);
+            color: #000000;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .instructions {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .code-box {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 10px;
+            color: #818cf8;
+        }
+
+        .copy-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .footer {
+            margin-top: 35px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 20px;
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .footer b {
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Xperience → Wuplay</h1>
+    <div class="subtitle">Migrate collections directly in your browser — no cookies needed!</div>
+
+    <div class="section-title">Option 1: Bookmarklet (Easiest for Mobile)</div>
+    <a class="bookmark-btn" id="helperLink" href="#">Migrate to Wuplay</a>
+    <div class="instructions">
+        <p style="font-weight: 600; margin-bottom: 8px;">For Mobile Safari / Chrome:</p>
+        <ol>
+            <li><b>Tap and hold</b> the "Migrate to Wuplay" button above, and select <b>Copy Link</b> (or Copy URL).</li>
+            <li>Add <b>any</b> random page to your Bookmarks (tap Share -> Add Bookmark).</li>
+            <li>Edit that bookmark, rename it to <b>"Migrate to Wuplay"</b>, delete the original address, and **paste** the copied code into the Address field.</li>
+            <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your device.</li>
+            <li>Tap your browser's address bar, type <b>"Migrate to"</b>, and select the bookmark.</li>
+        </ol>
+    </div>
+
+    <div class="code-box" id="codeBox">javascript:(function(){/*code loaded here*/})()</div>
+    <button class="copy-btn" id="copyBtn" style="margin-bottom: 25px;">Copy Bookmarklet Code</button>
+
+    <div class="section-title">Option 2: Browser Console (Guaranteed on PC)</div>
+    <div class="instructions">
+        If the bookmarklet doesn't trigger due to browser security blocks:
+        <ol>
+            <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your PC.</li>
+            <li>Press <b>F12</b> and open the <b>Console</b> tab.</li>
+            <li>Click the button below to copy the console version.</li>
+            <li>Paste it into the console and press <b>Enter</b>.</li>
+        </ol>
+    </div>
+    <button class="copy-btn" id="copyConsoleBtn">Copy Console Code</button>
+
+    <div class="footer">
+        Concept by Kisev2, created with the help of AI<br>
+        No information, cookies, or keys are stored. Everything is processed locally in your browser session.
+    </div>
+</div>
+
+<script>
+    const bookmarkletCode = "javascript:(function(){var s=document.createElement('script');s.src='http://127.0.0.1:8080/v1.1/importer.js?v='+Math.random();document.body.appendChild(s);})()";
+    
+    document.getElementById('helperLink').href = bookmarkletCode;
+    document.getElementById('codeBox').textContent = bookmarkletCode;
+
+    // Clipboard copy helpers
+    document.getElementById('copyBtn').onclick = () => {
+        navigator.clipboard.writeText(bookmarkletCode);
+        alert("Bookmarklet code copied to clipboard!");
+    };
+
+    document.getElementById('copyConsoleBtn').onclick = async () => {
+        try {
+            const resp = await fetch('importer.js');
+            const code = await resp.text();
+            navigator.clipboard.writeText(code);
+            alert("Console script copied to clipboard!");
+        } catch (err) {
+            // Fallback if local fetch fails
+            navigator.clipboard.writeText("javascript:(function(){var s=document.createElement('script');s.src='https://kisev2.github.io/xperience-to-wuplay/importer.js';document.body.appendChild(s);})()");
+            alert("Console script copied to clipboard!");
+        }
+    };
+</script>
+</body>
+</html>
