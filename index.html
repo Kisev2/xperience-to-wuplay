@@ -14,8 +14,6 @@
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border-color: #2b3548;
-            --success-color: #10b981;
-            --error-color: #ef4444;
             --code-bg: #090b0e;
         }
 
@@ -66,60 +64,26 @@
         .section-title {
             font-size: 1rem;
             font-weight: 600;
-            margin-top: 25px;
-            margin-bottom: 12px;
+            margin-top: 20px;
+            margin-bottom: 10px;
             color: var(--text-main);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 6px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--code-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent-color);
-        }
-
-        input[type="file"] {
-            padding: 8px;
-            cursor: pointer;
         }
 
         .bookmark-btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             background: linear-gradient(to right, #4f46e5, #6366f1);
             color: white;
             text-align: center;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 600;
-            margin-bottom: 15px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
 
         .instructions {
@@ -127,326 +91,383 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 15px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.5;
             color: var(--text-muted);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .instructions ol {
-            padding-left: 18px;
+            padding-left: 20px;
         }
 
         .instructions li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
-        .btn-start {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--success-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 15px;
-        }
-
-        .btn-start:hover {
-            opacity: 0.9;
-        }
-
-        .console {
-            margin-top: 25px;
+        .code-box {
             background-color: var(--code-bg);
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             font-family: monospace;
             font-size: 0.8rem;
-            height: 180px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            color: #34d399;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 10px;
+            color: #818cf8;
         }
 
-        .log-error { color: var(--error-color); }
-        .log-warn { color: #fbbf24; }
-        .log-info { color: var(--text-main); }
+        .copy-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--border-color);
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Xperience → Wuplay</h1>
-    <div class="subtitle">Import collections straight from your browser or mobile phone</div>
+    <div class="subtitle">Migrate collections directly in your browser — no cookies needed!</div>
 
-    <!-- Step 1: Remote Script Loader (Bookmarklet) -->
-    <div class="section-title">1. Bookmarklet Importer (No Cookie Needed)</div>
+    <div class="section-title">Option 1: Bookmarklet (Easiest for Mobile)</div>
     <a class="bookmark-btn" id="helperLink" href="#">Migrate to Wuplay</a>
     <div class="instructions">
-        <p style="font-weight: 600; margin-bottom: 4px;">To migrate collections directly inside your browser:</p>
+        <p style="font-weight: 600; margin-bottom: 8px;">For Mobile Safari / Chrome:</p>
         <ol>
-            <li><b>Tap and hold</b> the button above, select <b>Copy Link</b>.</li>
-            <li>Create any bookmark on your phone, name it <b>"Migrate to Wuplay"</b>, and paste the code into its URL field.</li>
-            <li>Open <a href="https://config.wuplay.app/configure/yuif03" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your phone.</li>
-            <li>Tap your address bar, type <b>"Migrate to Wuplay"</b>, and select the bookmark. A neat overlay box will instantly pop up on the page for you to upload your files!</li>
+            <li><b>Tap and hold</b> the "Migrate to Wuplay" button above, and select <b>Copy Link</b> (or Copy URL).</li>
+            <li>Add <b>any</b> random page to your Bookmarks (tap Share -> Add Bookmark).</li>
+            <li>Edit that bookmark, rename it to <b>"Migrate to Wuplay"</b>, delete the original address, and **paste** the copied code into the Address field.</li>
+            <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your device.</li>
+            <li>Tap your browser's address bar, type <b>"Migrate to"</b>, and select the bookmark.</li>
         </ol>
     </div>
 
-    <!-- Step 2: Form Inputs -->
-    <div class="section-title">2. Configuration</div>
-    <div class="form-group">
-        <label for="profileKey">Wuplay Profile Key</label>
-        <input type="text" id="profileKey" placeholder="e.g. yuif03">
+    <div class="code-box" id="codeBox">javascript:(function(){/*code loaded here*/})()</div>
+    <button class="copy-btn" id="copyBtn" style="margin-bottom: 25px;">Copy Bookmarklet Code</button>
+
+    <div class="section-title">Option 2: Browser Console (Guaranteed on PC)</div>
+    <div class="instructions">
+        If the bookmarklet doesn't trigger due to browser security blocks:
+        <ol>
+            <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your PC.</li>
+            <li>Press <b>F12</b> and open the <b>Console</b> tab.</li>
+            <li>Click the button below to copy the console version.</li>
+            <li>Paste it into the console and press <b>Enter</b>.</li>
+        </ol>
     </div>
-
-    <div class="form-group">
-        <label for="cookie">cf_clearance Cookie Value</label>
-        <input type="text" id="cookie" placeholder="Paste value here (or use the Cookie Helper)">
-    </div>
-
-    <div class="form-group">
-        <label for="collectionFile">Xperience Collection JSON</label>
-        <input type="file" id="collectionFile" accept=".json">
-    </div>
-
-    <div class="form-group">
-        <label for="manifestFile">Xperience Addon Manifest JSON</label>
-        <input type="file" id="manifestFile" accept=".json">
-    </div>
-
-    <button class="btn-start" id="startBtn">Start Migration</button>
-
-    <div class="console" id="logOutput">Console ready...</div>
+    <button class="copy-btn" id="copyConsoleBtn">Copy Console Code</button>
 </div>
 
 <script>
-    const logEl = document.getElementById('logOutput');
-    const startBtn = document.getElementById('startBtn');
-
-    // Auto-fill cookie from URL parameters if redirected back by the helper
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlCookie = urlParams.get('cookie');
-    if (urlCookie) {
-        document.getElementById('cookie').value = decodeURIComponent(urlCookie);
-        // Clear url params so clean reload doesn't keep it in URL bar
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Build the remote loader bookmarklet script dynamically
-    const helperCode = `javascript:(function(){
-        var s=document.createElement('script');
-        s.src='https://kisev2.github.io/xperience-to-wuplay/importer.js';
-        document.body.appendChild(s);
-    })()`;
-    
-    document.getElementById('helperLink').href = helperCode.replace(/\s+/g, ' ');
-
-    function log(msg, type = 'info') {
-        const span = document.createElement('span');
-        span.className = `log-${type}`;
-        span.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n`;
-        logEl.appendChild(span);
-        logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    async function readFileAsJson(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    resolve(JSON.parse(e.target.result));
-                } catch (err) {
-                    reject(new Error("Invalid JSON structure"));
-                }
-            };
-            reader.onerror = () => reject(new Error("File read failed"));
-            reader.readAsText(file);
-        });
-    }
-
-    startBtn.addEventListener('click', async () => {
-        const profileKey = document.getElementById('profileKey').value.trim();
-        const cookie = document.getElementById('cookie').value.trim();
-        const colFile = document.getElementById('collectionFile').files[0];
-        const manFile = document.getElementById('manifestFile').files[0];
-
-        if (!profileKey || !cookie || !colFile || !manFile) {
-            alert("All fields are required. Please upload both JSON files.");
+    // The exact script that will run inside the user's browser tab on config.wuplay.app
+    const rawScript = `(function() {
+        if (!window.location.hostname.includes('wuplay.app')) {
+            alert('Please run this bookmarklet while visiting config.wuplay.app');
             return;
         }
 
-        logEl.innerHTML = '';
-        log("Initiating migration...");
+        // 1. Create Modal UI overlay on the page
+        const div = document.createElement('div');
+        div.style.position = 'fixed';
+        div.style.top = '10%';
+        div.style.left = '50%';
+        div.style.transform = 'translateX(-50%)';
+        div.style.width = '90%';
+        div.style.maxWidth = '500px';
+        div.style.backgroundColor = '#161a23';
+        div.style.color = '#f3f4f6';
+        div.style.border = '2px solid #2b3548';
+        div.style.borderRadius = '16px';
+        div.style.padding = '20px';
+        div.style.zIndex = '999999';
+        div.style.fontFamily = 'sans-serif';
+        div.style.boxShadow = '0 10px 40px rgba(0,0,0,0.8)';
 
-        try {
-            const collections = await readFileAsJson(colFile);
-            const manifest = await readFileAsJson(manFile);
-            log(`Parsing complete: ${collections.length} collections.`);
-
-            // Create catalog map
-            const catalogMap = {};
-            (manifest.catalogs || []).forEach(cat => {
-                catalogMap[`${cat.id}:${cat.type}`] = {
-                    name: cat.name || cat.id,
-                    extra: cat.extra || []
-                };
-            });
-
-            // Proxy base url
-            const proxy = "https://corsproxy.io/?";
-            const baseUrl = `${proxy}${encodeURIComponent(`https://config.wuplay.app/configure/api/${profileKey}`)}`;
+        div.innerHTML = \`
+            <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;">Xperience -> Wuplay Migrator</h3>
+            <p style="font-size:0.85rem;color:#9ca3af;margin-bottom:15px;">Run directly in your browser session. No cookies required.</p>
             
-            const headers = {
-                "Content-Type": "application/json",
-                "Cookie": cookie.startsWith('cf_clearance=') ? cookie : `cf_clearance=${cookie}`,
-                "Referer": `https://config.wuplay.app/configure/${profileKey}`,
-                "Origin": "https://config.wuplay.app"
-            };
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#9ca3af;">1. SELECT COLLECTION JSON</label>
+                <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#090b0e;border:1px solid #2b3548;padding:6px;border-radius:6px;">
+            </div>
 
-            // Detect Xperience addon details
-            log("Locating Xperience Addon in profile...");
-            const addonsResp = await fetch(baseUrl, { headers });
-            if (!addonsResp.ok) throw new Error("Authentication failed. Check your cookie.");
-            const profileData = await addonsResp.json();
+            <div style="margin-bottom:15px;">
+                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#9ca3af;">2. SELECT MANIFEST JSON</label>
+                <input type="file" id="mig-man-file" accept=".json" style="width:100%;color:#fff;background:#090b0e;border:1px solid #2b3548;padding:6px;border-radius:6px;">
+            </div>
 
-            const xperience = (profileData.addons || []).find(a => a.id.startsWith("app.xperience."));
-            if (!xperience) throw new Error("Addon 'Xperience' not installed in Wuplay.");
+            <button id="mig-start-btn" style="width:100%;padding:12px;background:#4f46e5;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Start Import</button>
+            
+            <div id="mig-console" style="margin-top:15px;background:#090b0e;border:1px solid #2b3548;border-radius:8px;padding:10px;height:120px;overflow-y:auto;font-family:monospace;font-size:0.75rem;white-space:pre-wrap;color:#34d399;">Ready...</div>
+            <button id="mig-close-btn" style="width:100%;margin-top:10px;padding:6px;background:transparent;color:#9ca3af;border:none;cursor:pointer;font-size:0.8rem;">Close</button>
+        \`;
 
-            const addonId = xperience.id;
-            const transportUrl = xperience.url.replace("/manifest.json", "");
-            log(`Found: ${addonId}`);
+        document.body.appendChild(div);
 
-            // Fetch existing hubs for duplicates
-            const hubsResp = await fetch(`${baseUrl}/hubs`, { headers });
-            const existingHubs = hubsResp.ok ? await hubsResp.json() : [];
+        const consoleEl = div.querySelector('#mig-console');
+        const startBtn = div.querySelector('#mig-start-btn');
+        const closeBtn = div.querySelector('#mig-close-btn');
 
-            for (const col of collections) {
-                log(`Migrating Hub: ${col.title}`);
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-                // Clean duplicates
-                const match = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
-                if (match) {
-                    log(`  Replacing existing hub "${col.title}"...`, 'warn');
-                    await fetch(`${baseUrl}/hubs/${match.id}`, { method: 'DELETE', headers });
-                    await new Promise(r => setTimeout(r, 500));
-                }
+        function printLog(msg, type='info') {
+            const color = type === 'error' ? '#ef4444' : type === 'warn' ? '#fbbf24' : '#34d399';
+            consoleEl.innerHTML += \`<div style="color:\${color}">\${msg}</div>\`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
 
-                // Create hub
-                const chResp = await fetch(`${baseUrl}/hubs`, {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({
-                        name: col.title,
-                        detailViewType: "poster_rows",
-                        tileShape: "landscape"
-                    })
-                });
-                const hub = await chResp.json();
-                log(`  Created Hub (ID: ${hub.id})`, 'success');
-                await new Promise(r => setTimeout(r, 500));
+        // Dragging logic for PC/Mobile
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
 
-                const hubItems = [];
+        const dragStart = (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+            isDragging = true;
+            div.style.transform = 'none';
 
-                for (const folder of (col.folders || [])) {
-                    log(`    Section: ${folder.title}`);
-                    const itemResp = await fetch(`${baseUrl}/hubs/${hub.id}/items`, {
-                        method: 'POST',
-                        headers,
-                        body: JSON.stringify({ name: folder.title })
-                    });
-                    const item = await itemResp.json();
-                    hubItems.push({ id: item.id, name: folder.title });
-                    await new Promise(r => setTimeout(r, 500));
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
 
-                    // Hub order list
-                    await fetch(`${baseUrl}/hubs/${hub.id}`, {
-                        method: 'PUT',
-                        headers,
-                        body: JSON.stringify({
-                            items: hubItems.map(i => ({ slug: String(i.id), name: i.name }))
-                        })
-                    });
-                    await new Promise(r => setTimeout(r, 500));
+            const rect = div.getBoundingClientRect();
+            initialX = rect.left;
+            initialY = rect.top;
+            
+            startX = clientX - initialX;
+            startY = clientY - initialY;
+        };
 
-                    // Metadata visibility
-                    await fetch(`${baseUrl}/hubs/${hub.id}/items/${item.id}`, {
-                        method: 'PUT',
-                        headers,
-                        body: JSON.stringify({
-                            name: folder.title,
-                            showName: !folder.hideTitle
-                        })
-                    });
-                    await new Promise(r => setTimeout(r, 500));
+        const drag = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
 
-                    // Logo Upload via Weserv proxy
-                    if (folder.coverImageUrl) {
-                        try {
-                            const logoProxyUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(folder.coverImageUrl);
-                            const imgResp = await fetch(logoProxyUrl);
-                            const blob = await imgResp.blob();
-                            const formData = new FormData();
-                            formData.append('file', blob, 'cover.webp');
+            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
 
-                            const uploadHeaders = { ...headers };
-                            delete uploadHeaders["Content-Type"];
+            const x = clientX - startX;
+            const y = clientY - startY;
 
-                            await fetch(`${baseUrl}/hubs/${hub.id}/items/${item.id}/logo`, {
-                                method: 'POST',
-                                headers: uploadHeaders,
-                                body: formData
-                            });
-                            log("      Uploaded cover image");
-                        } catch (e) {
-                            log("      WARNING: Cover upload failed", "warn");
-                        }
-                        await new Promise(r => setTimeout(r, 500));
-                    }
+            div.style.left = \`\${x}px\`;
+            div.style.top = \`\${y}px\`;
+        };
 
-                    // Catalogs payload
-                    const seen = new Set();
-                    const catalogsPayload = [];
-                    (folder.catalogSources || []).forEach(source => {
-                        const key = `${source.catalogId}:${source.type}`;
-                        if (seen.has(key)) return;
-                        seen.add(key);
+        const dragEnd = () => {
+            isDragging = false;
+        };
 
-                        const meta = catalogMap[key] || {};
-                        catalogsPayload.push({
-                            addonId,
-                            catalogId: source.catalogId,
-                            type: source.type,
-                            name: meta.name || source.catalogId,
-                            transportUrl,
-                            addonName: "Xperience",
-                            extra: meta.extra || [],
-                            genres: null
-                        });
-                    });
+        const header = div.querySelector('h3');
+        header.style.cursor = 'move';
+        header.addEventListener('mousedown', dragStart);
+        header.addEventListener('touchstart', dragStart, { passive: true });
+        
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('touchmove', drag, { passive: false });
+        window.addEventListener('mouseup', dragEnd);
+        window.addEventListener('touchend', dragEnd);
 
-                    if (catalogsPayload.length > 0) {
-                        await fetch(`${baseUrl}/layouts/${item.layoutId}/rows/addon-bulk`, {
-                            method: 'POST',
-                            headers,
-                            body: JSON.stringify({ catalogs: catalogsPayload })
-                        });
-                        log(`      Added ${catalogsPayload.length} catalogs.`);
-                        await new Promise(r => setTimeout(r, 500));
-                    }
-                }
+        closeBtn.onclick = () => {
+            window.removeEventListener('mousemove', drag);
+            window.removeEventListener('touchmove', drag);
+            window.removeEventListener('mouseup', dragEnd);
+            window.removeEventListener('touchend', dragEnd);
+            div.remove();
+        };
+
+        startBtn.onclick = async () => {
+            const colFile = div.querySelector('#mig-col-file').files[0];
+            const manFile = div.querySelector('#mig-man-file').files[0];
+
+            if (!colFile || !manFile) {
+                alert("Please select both JSON files first.");
+                return;
             }
 
-            log("Migration complete!", "success");
+            consoleEl.innerHTML = '';
+            printLog("Reading files...");
 
-        } catch (err) {
-            log(err.message, 'error');
-        }
-    });
+            try {
+                const collections = await new Promise((resolve, reject) => {
+                    const r = new FileReader();
+                    r.onload = e => resolve(JSON.parse(e.target.result));
+                    r.onerror = reject;
+                    r.readAsText(colFile);
+                });
+
+                const manifest = await new Promise((resolve, reject) => {
+                    const r = new FileReader();
+                    r.onload = e => resolve(JSON.parse(e.target.result));
+                    r.onerror = reject;
+                    r.readAsText(manFile);
+                });
+
+                printLog(\`Files loaded. \${collections.length} collections parsed.\`);
+
+                // Auto-detect Profile Key from URL
+                const pathParts = window.location.pathname.split('/');
+                const profileKey = pathParts[pathParts.length - 1] || 'yuif03';
+                const baseUrl = \`/configure/api/\${profileKey}\`;
+
+                // Addon details mapping
+                const catalogMap = {};
+                (manifest.catalogs || []).forEach(cat => {
+                    catalogMap[\`\${cat.id}:\${cat.type}\`] = { name: cat.name || cat.id, extra: cat.extra || [] };
+                });
+
+                // Find Xperience addon details
+                printLog("Fetching addon config...");
+                const profileResp = await fetch(baseUrl);
+                const profileData = await profileResp.json();
+                const xperience = (profileData.addons || []).find(a => a.id.startsWith("app.xperience."));
+
+                if (!xperience) throw new Error("Xperience addon not found in Wuplay!");
+
+                const addonId = xperience.id;
+                const transportUrl = xperience.url.replace('/manifest.json', '');
+
+                // Fetch existing hubs
+                const hubsResp = await fetch(\`\${baseUrl}/hubs\`);
+                const existingHubs = await hubsResp.json();
+
+                for (const col of collections) {
+                    printLog(\`Processing Hub: \${col.title}\`);
+
+                    // Clean duplicates
+                    const dup = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
+                    if (dup) {
+                        printLog(\`  Replacing existing hub: \${col.title}\`, 'warn');
+                        await fetch(\`\text{ }\${baseUrl}/hubs/\text{ }\${dup.id}\`, { method: 'DELETE' });
+                        await sleep(500);
+                    }
+
+                    // Create Hub
+                    const chResp = await fetch(\`\${baseUrl}/hubs\`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: col.title, detailViewType: "poster_rows", tileShape: "landscape" })
+                    });
+                    const hub = await chResp.json();
+                    printLog(\`  Created Hub (ID: \${hub.id})\`);
+                    await sleep(500);
+
+                    const hubItems = [];
+
+                    for (const folder of (col.folders || [])) {
+                        printLog(\`    Creating Section: \${folder.title}\`);
+                        const itemResp = await fetch(\`\${baseUrl}/hubs/\${hub.id}/items\`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: folder.title })
+                        });
+                        const item = await itemResp.json();
+                        hubItems.push({ id: item.id, name: folder.title });
+                        await sleep(500);
+
+                        // Update Hub Items list
+                        await fetch(\`\${baseUrl}/hubs/\${hub.id}\`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ items: hubItems.map(i => ({ slug: String(i.id), name: i.name })) })
+                        });
+                        await sleep(500);
+
+                        // Set metadata
+                        await fetch(\`\${baseUrl}/hubs/\${hub.id}/items/\${item.id}\`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: folder.title, showName: !folder.hideTitle })
+                        });
+                        await sleep(500);
+
+                        // Upload Logo via images.weserv.nl CORS proxy
+                        if (folder.coverImageUrl) {
+                            try {
+                                const proxyUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(folder.coverImageUrl);
+                                const imgResp = await fetch(proxyUrl);
+                                const blob = await imgResp.blob();
+                                const formData = new FormData();
+                                formData.append('file', blob, 'cover.webp');
+                                await fetch(\`\${baseUrl}/hubs/\${hub.id}/items/\${item.id}/logo\`, {
+                                    method: 'POST',
+                                    body: formData
+                                });
+                                printLog("      Logo uploaded successfully");
+                            } catch (e) {
+                                printLog("      WARNING: Logo upload failed", "warn");
+                            }
+                            await sleep(500);
+                        }
+
+                        // Add Catalogs
+                        const seen = new Set();
+                        const catalogsPayload = [];
+                        (folder.catalogSources || []).forEach(source => {
+                            const key = \`\${source.catalogId}:\${source.type}\`;
+                            if (seen.has(key)) return;
+                            seen.add(key);
+
+                            const meta = catalogMap[key] || {};
+                            catalogsPayload.push({
+                                addonId,
+                                catalogId: source.catalogId,
+                                type: source.type,
+                                name: meta.name || source.catalogId,
+                                transportUrl,
+                                addonName: "Xperience",
+                                extra: meta.extra || [],
+                                genres: null
+                            });
+                        });
+
+                        if (catalogsPayload.length > 0) {
+                            await fetch(\`\${baseUrl}/layouts/\${item.layoutId}/rows/addon-bulk\`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ catalogs: catalogsPayload })
+                            });
+                            printLog(\`      Added \${catalogsPayload.length} catalogs\`);
+                            await sleep(500);
+                        }
+                    }
+                }
+
+                printLog("Migration successfully completed!", "success");
+
+            } catch (err) {
+                printLog("ERROR: " + err.message, "error");
+            }
+        };
+    })();`;
+
+    // Minify script slightly for bookmarklet URL
+    const bookmarkletCode = 'javascript:' + encodeURIComponent(rawScript.replace(/\s+/g, ' '));
+    
+    document.getElementById('helperLink').href = bookmarkletCode;
+    document.getElementById('codeBox').textContent = bookmarkletCode;
+
+    // Clipboard copy helpers
+    document.getElementById('copyBtn').onclick = () => {
+        navigator.clipboard.writeText(bookmarkletCode);
+        alert("Bookmarklet code copied to clipboard!");
+    };
+
+    document.getElementById('copyConsoleBtn').onclick = () => {
+        navigator.clipboard.writeText(rawScript);
+        alert("Console script copied to clipboard!");
+    };
 </script>
 </body>
 </html>
