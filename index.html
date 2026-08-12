@@ -365,7 +365,7 @@
                     const dup = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
                     if (dup) {
                         printLog(\`  Replacing existing hub: \${col.title}\`, 'warn');
-                        await fetch(\`\text{ }\${baseUrl}/hubs/\text{ }\${dup.id}\`, { method: 'DELETE' });
+                        await fetch(\`\${baseUrl}/hubs/\${dup.id}\`, { method: 'DELETE' });
                         await sleep(500);
                     }
 
@@ -431,7 +431,7 @@
                         const seen = new Set();
                         const catalogsPayload = [];
                         (folder.catalogSources || []).forEach(source => {
-                            const key = \`\${source.catalogId}:\${source.type}\`;
+                            const key = `\${source.catalogId}:\${source.type}`;
                             if (seen.has(key)) return;
                             seen.add(key);
 
@@ -449,7 +449,7 @@
                         });
 
                         if (catalogsPayload.length > 0) {
-                            await fetch(\`\${baseUrl}/layouts/\${item.layoutId}/rows/addon-bulk\`, {
+                            await fetch(`\${baseUrl}/layouts/\${item.layoutId}/rows/addon-bulk`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ catalogs: catalogsPayload })
