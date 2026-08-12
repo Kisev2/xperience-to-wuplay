@@ -8,3 +8,8 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Keep collections and manifests private
+Xperience Collection/
+Xperience Addon Manifest File/
+automate_hubs.py
