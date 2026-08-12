@@ -165,26 +165,37 @@
                 printLog(`Processing Hub: ${col.title}`);
 
                 const dup = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
+                let hubId = null;
+
                 if (dup) {
-                    printLog(`  Replacing existing hub: ${col.title}`, 'warn');
-                    await fetch(`${baseUrl}/hubs/${dup.id}`, { method: 'DELETE' });
-                    await sleep(500);
+                    const confirmReplace = confirm(`Hub "${col.title}" already exists. Would you like to REPLACE it?\n\nOK = Delete and Recreate\nCancel = Skip`);
+                    if (confirmReplace) {
+                        printLog(`  Replacing existing hub: ${col.title}`, 'warn');
+                        await fetch(`${baseUrl}/hubs/${dup.id}`, { method: 'DELETE' });
+                        await sleep(500);
+                    } else {
+                        printLog(`  Skipped existing hub: ${col.title}`, 'warn');
+                        continue;
+                    }
                 }
 
-                const chResp = await fetch(`${baseUrl}/hubs`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: col.title, detailViewType: "poster_rows", tileShape: "landscape" })
-                });
-                const hub = await chResp.json();
-                printLog(`  Created Hub (ID: ${hub.id})`);
-                await sleep(500);
+                if (!hubId) {
+                    const chResp = await fetch(`${baseUrl}/hubs`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: col.title, detailViewType: "poster_rows", tileShape: "landscape" })
+                    });
+                    const hub = await chResp.json();
+                    hubId = hub.id;
+                    printLog(`  Created Hub (ID: ${hubId})`);
+                    await sleep(500);
+                }
 
                 const hubItems = [];
 
                 for (const folder of (col.folders || [])) {
                     printLog(`    Creating Section: ${folder.title}`);
-                    const itemResp = await fetch(`${baseUrl}/hubs/${hub.id}/items`, {
+                    const itemResp = await fetch(`${baseUrl}/hubs/${hubId}/items`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name: folder.title })
@@ -193,14 +204,14 @@
                     hubItems.push({ id: item.id, name: folder.title });
                     await sleep(500);
 
-                    await fetch(`${baseUrl}/hubs/${hub.id}`, {
+                    await fetch(`${baseUrl}/hubs/${hubId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ items: hubItems.map(i => ({ slug: String(i.id), name: i.name })) })
                     });
                     await sleep(500);
 
-                    await fetch(`${baseUrl}/hubs/${hub.id}/items/${item.id}`, {
+                    await fetch(`${baseUrl}/hubs/${hubId}/items/${item.id}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name: folder.title, showName: !folder.hideTitle })
@@ -214,7 +225,7 @@
                             const blob = await imgResp.blob();
                             const formData = new FormData();
                             formData.append('file', blob, 'cover.webp');
-                            await fetch(`/configure/api/${profileKey}/hubs/${hub.id}/items/${item.id}/logo`, {
+                            await fetch(`/configure/api/${profileKey}/hubs/${hubId}/items/${item.id}/logo`, {
                                 method: 'POST',
                                 body: formData
                             });
