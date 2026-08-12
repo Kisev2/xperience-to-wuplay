@@ -1,0 +1,10 @@
+# Ignore local configuration files containing cookies/keys
+config.json
+
+# Ignore python caches
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db

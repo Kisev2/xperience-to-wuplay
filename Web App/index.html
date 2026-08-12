@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xperience to Wuplay Migrator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0f14;
+            --card-bg: #161a23;
+            --accent-color: #4f46e5;
+            --accent-hover: #6366f1;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2b3548;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --code-bg: #090b0e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .bookmark-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #4f46e5, #6366f1);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .instructions {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            padding-left: 18px;
+        }
+
+        .instructions li {
+            margin-bottom: 6px;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn-start:hover {
+            opacity: 0.9;
+        }
+
+        .console {
+            margin-top: 25px;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            height: 180px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: #34d399;
+        }
+
+        .log-error { color: var(--error-color); }
+        .log-warn { color: #fbbf24; }
+        .log-info { color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Xperience → Wuplay</h1>
+    <div class="subtitle">Import collections straight from your browser or mobile phone</div>
+
+    <!-- Step 1: Remote Script Loader (Bookmarklet) -->
+    <div class="section-title">1. Bookmarklet Importer (No Cookie Needed)</div>
+    <a class="bookmark-btn" id="helperLink" href="#">Migrate to Wuplay</a>
+    <div class="instructions">
+        <p style="font-weight: 600; margin-bottom: 4px;">To migrate collections directly inside your browser:</p>
+        <ol>
+            <li><b>Tap and hold</b> the button above, select <b>Copy Link</b>.</li>
+            <li>Create any bookmark on your phone, name it <b>"Migrate to Wuplay"</b>, and paste the code into its URL field.</li>
+            <li>Open <a href="https://config.wuplay.app/configure/yuif03" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your phone.</li>
+            <li>Tap your address bar, type <b>"Migrate to Wuplay"</b>, and select the bookmark. A neat overlay box will instantly pop up on the page for you to upload your files!</li>
+        </ol>
+    </div>
+
+    <!-- Step 2: Form Inputs -->
+    <div class="section-title">2. Configuration</div>
+    <div class="form-group">
+        <label for="profileKey">Wuplay Profile Key</label>
+        <input type="text" id="profileKey" placeholder="e.g. yuif03" value="yuif03">
+    </div>
+
+    <div class="form-group">
+        <label for="cookie">cf_clearance Cookie Value</label>
+        <input type="text" id="cookie" placeholder="Paste value here (or use the Cookie Helper)">
+    </div>
+
+    <div class="form-group">
+        <label for="collectionFile">Xperience Collection JSON</label>
+        <input type="file" id="collectionFile" accept=".json">
+    </div>
+
+    <div class="form-group">
+        <label for="manifestFile">Xperience Addon Manifest JSON</label>
+        <input type="file" id="manifestFile" accept=".json">
+    </div>
+
+    <button class="btn-start" id="startBtn">Start Migration</button>
+
+    <div class="console" id="logOutput">Console ready...</div>
+</div>
+
+<script>
+    const logEl = document.getElementById('logOutput');
+    const startBtn = document.getElementById('startBtn');
+
+    // Auto-fill cookie from URL parameters if redirected back by the helper
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCookie = urlParams.get('cookie');
+    if (urlCookie) {
+        document.getElementById('cookie').value = decodeURIComponent(urlCookie);
+        // Clear url params so clean reload doesn't keep it in URL bar
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Build the remote loader bookmarklet script dynamically
+    const helperCode = `javascript:(function(){
+        var s=document.createElement('script');
+        s.src='https://kisev2.github.io/xperience-to-wuplay/importer.js';
+        document.body.appendChild(s);
+    })()`;
+    
+    document.getElementById('helperLink').href = helperCode.replace(/\s+/g, ' ');
+
+    function log(msg, type = 'info') {
+        const span = document.createElement('span');
+        span.className = `log-${type}`;
+        span.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+        logEl.appendChild(span);
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    async function readFileAsJson(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    resolve(JSON.parse(e.target.result));
+                } catch (err) {
+                    reject(new Error("Invalid JSON structure"));
+                }
+            };
+            reader.onerror = () => reject(new Error("File read failed"));
+            reader.readAsText(file);
+        });
+    }
+
+    startBtn.addEventListener('click', async () => {
+        const profileKey = document.getElementById('profileKey').value.trim();
+        const cookie = document.getElementById('cookie').value.trim();
+        const colFile = document.getElementById('collectionFile').files[0];
+        const manFile = document.getElementById('manifestFile').files[0];
+
+        if (!profileKey || !cookie || !colFile || !manFile) {
+            alert("All fields are required. Please upload both JSON files.");
+            return;
+        }
+
+        logEl.innerHTML = '';
+        log("Initiating migration...");
+
+        try {
+            const collections = await readFileAsJson(colFile);
+            const manifest = await readFileAsJson(manFile);
+            log(`Parsing complete: ${collections.length} collections.`);
+
+            // Create catalog map
+            const catalogMap = {};
+            (manifest.catalogs || []).forEach(cat => {
+                catalogMap[`${cat.id}:${cat.type}`] = {
+                    name: cat.name || cat.id,
+                    extra: cat.extra || []
+                };
+            });
+
+            // Proxy base url
+            const proxy = "https://corsproxy.io/?";
+            const baseUrl = `${proxy}${encodeURIComponent(`https://config.wuplay.app/configure/api/${profileKey}`)}`;
+            
+            const headers = {
+                "Content-Type": "application/json",
+                "Cookie": cookie.startsWith('cf_clearance=') ? cookie : `cf_clearance=${cookie}`,
+                "Referer": `https://config.wuplay.app/configure/${profileKey}`,
+                "Origin": "https://config.wuplay.app"
+            };
+
+            // Detect Xperience addon details
+            log("Locating Xperience Addon in profile...");
+            const addonsResp = await fetch(baseUrl, { headers });
+            if (!addonsResp.ok) throw new Error("Authentication failed. Check your cookie.");
+            const profileData = await addonsResp.json();
+
+            const xperience = (profileData.addons || []).find(a => a.id.startsWith("app.xperience."));
+            if (!xperience) throw new Error("Addon 'Xperience' not installed in Wuplay.");
+
+            const addonId = xperience.id;
+            const transportUrl = xperience.url.replace("/manifest.json", "");
+            log(`Found: ${addonId}`);
+
+            // Fetch existing hubs for duplicates
+            const hubsResp = await fetch(`${baseUrl}/hubs`, { headers });
+            const existingHubs = hubsResp.ok ? await hubsResp.json() : [];
+
+            for (const col of collections) {
+                log(`Migrating Hub: ${col.title}`);
+
+                // Clean duplicates
+                const match = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
+                if (match) {
+                    log(`  Replacing existing hub "${col.title}"...`, 'warn');
+                    await fetch(`${baseUrl}/hubs/${match.id}`, { method: 'DELETE', headers });
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
+                // Create hub
+                const chResp = await fetch(`${baseUrl}/hubs`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({
+                        name: col.title,
+                        detailViewType: "poster_rows",
+                        tileShape: "landscape"
+                    })
+                });
+                const hub = await chResp.json();
+                log(`  Created Hub (ID: ${hub.id})`, 'success');
+                await new Promise(r => setTimeout(r, 500));
+
+                const hubItems = [];
+
+                for (const folder of (col.folders || [])) {
+                    log(`    Section: ${folder.title}`);
+                    const itemResp = await fetch(`${baseUrl}/hubs/${hub.id}/items`, {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({ name: folder.title })
+                    });
+                    const item = await itemResp.json();
+                    hubItems.push({ id: item.id, name: folder.title });
+                    await new Promise(r => setTimeout(r, 500));
+
+                    // Hub order list
+                    await fetch(`${baseUrl}/hubs/${hub.id}`, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify({
+                            items: hubItems.map(i => ({ slug: String(i.id), name: i.name }))
+                        })
+                    });
+                    await new Promise(r => setTimeout(r, 500));
+
+                    // Metadata visibility
+                    await fetch(`${baseUrl}/hubs/${hub.id}/items/${item.id}`, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify({
+                            name: folder.title,
+                            showName: !folder.hideTitle
+                        })
+                    });
+                    await new Promise(r => setTimeout(r, 500));
+
+                    // Logo Upload via Weserv proxy
+                    if (folder.coverImageUrl) {
+                        try {
+                            const logoProxyUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(folder.coverImageUrl);
+                            const imgResp = await fetch(logoProxyUrl);
+                            const blob = await imgResp.blob();
+                            const formData = new FormData();
+                            formData.append('file', blob, 'cover.webp');
+
+                            const uploadHeaders = { ...headers };
+                            delete uploadHeaders["Content-Type"];
+
+                            await fetch(`${baseUrl}/hubs/${hub.id}/items/${item.id}/logo`, {
+                                method: 'POST',
+                                headers: uploadHeaders,
+                                body: formData
+                            });
+                            log("      Uploaded cover image");
+                        } catch (e) {
+                            log("      WARNING: Cover upload failed", "warn");
+                        }
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+
+                    // Catalogs payload
+                    const seen = new Set();
+                    const catalogsPayload = [];
+                    (folder.catalogSources || []).forEach(source => {
+                        const key = `${source.catalogId}:${source.type}`;
+                        if (seen.has(key)) return;
+                        seen.add(key);
+
+                        const meta = catalogMap[key] || {};
+                        catalogsPayload.push({
+                            addonId,
+                            catalogId: source.catalogId,
+                            type: source.type,
+                            name: meta.name || source.catalogId,
+                            transportUrl,
+                            addonName: "Xperience",
+                            extra: meta.extra || [],
+                            genres: null
+                        });
+                    });
+
+                    if (catalogsPayload.length > 0) {
+                        await fetch(`${baseUrl}/layouts/${item.layoutId}/rows/addon-bulk`, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify({ catalogs: catalogsPayload })
+                        });
+                        log(`      Added ${catalogsPayload.length} catalogs.`);
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+                }
+            }
+
+            log("Migration complete!", "success");
+
+        } catch (err) {
+            log(err.message, 'error');
+        }
+    });
+</script>
+</body>
+</html>
