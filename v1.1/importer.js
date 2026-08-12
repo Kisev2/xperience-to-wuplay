@@ -132,12 +132,20 @@
         printLog("Reading files...");
 
         try {
-            const collections = await new Promise((resolve, reject) => {
+            let collections = await new Promise((resolve, reject) => {
                 const r = new FileReader();
                 r.onload = e => resolve(JSON.parse(e.target.result));
                 r.onerror = reject;
                 r.readAsText(colFile);
             });
+
+            // Auto-extract array if wrapped inside object, or throw error
+            if (collections && !Array.isArray(collections) && Array.isArray(collections.collections)) {
+                collections = collections.collections;
+            }
+            if (!Array.isArray(collections)) {
+                throw new Error("Invalid Collection JSON. Make sure you chose the collections file first.");
+            }
 
             const manifest = await new Promise((resolve, reject) => {
                 const r = new FileReader();
