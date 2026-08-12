@@ -140,7 +140,7 @@
             printLog(`Files loaded. ${collections.length} collections parsed.`);
 
             const pathParts = window.location.pathname.split('/');
-            const profileKey = pathParts[pathParts.length - 1] || 'yuif03';
+            const profileKey = pathParts[pathParts.length - 1] || 'your_profile_key';
             const baseUrl = `/configure/api/${profileKey}`;
 
             const catalogMap = {};
