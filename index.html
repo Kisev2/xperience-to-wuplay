@@ -204,33 +204,33 @@
         div.style.transform = 'translateX(-50%)';
         div.style.width = '90%';
         div.style.maxWidth = '500px';
-        div.style.backgroundColor = '#161a23';
-        div.style.color = '#f3f4f6';
-        div.style.border = '2px solid #2b3548';
+        div.style.backgroundColor = '#000000';
+        div.style.color = '#ffffff';
+        div.style.border = '2px solid #222222';
         div.style.borderRadius = '16px';
         div.style.padding = '20px';
         div.style.zIndex = '999999';
         div.style.fontFamily = 'sans-serif';
-        div.style.boxShadow = '0 10px 40px rgba(0,0,0,0.8)';
+        div.style.boxShadow = '0 10px 40px rgba(0,0,0,0.9)';
 
         div.innerHTML = \`
-            <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;">Xperience -> Wuplay Migrator</h3>
-            <p style="font-size:0.85rem;color:#9ca3af;margin-bottom:15px;">Run directly in your browser session. No cookies required.</p>
+            <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience -> Wuplay Migrator</h3>
+            <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Make sure Xperience addon is installed in Wuplay.</p>
             
             <div style="margin-bottom:12px;">
-                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#9ca3af;">1. SELECT COLLECTION JSON</label>
-                <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#090b0e;border:1px solid #2b3548;padding:6px;border-radius:6px;">
+                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">1. SELECT COLLECTION JSON</label>
+                <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
             </div>
 
             <div style="margin-bottom:15px;">
-                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#9ca3af;">2. SELECT MANIFEST JSON</label>
-                <input type="file" id="mig-man-file" accept=".json" style="width:100%;color:#fff;background:#090b0e;border:1px solid #2b3548;padding:6px;border-radius:6px;">
+                <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">2. SELECT MANIFEST JSON</label>
+                <input type="file" id="mig-man-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
             </div>
 
-            <button id="mig-start-btn" style="width:100%;padding:12px;background:#4f46e5;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Start Import</button>
+            <button id="mig-start-btn" style="width:100%;padding:12px;background:#ffffff;color:black;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Start Import</button>
             
-            <div id="mig-console" style="margin-top:15px;background:#090b0e;border:1px solid #2b3548;border-radius:8px;padding:10px;height:120px;overflow-y:auto;font-family:monospace;font-size:0.75rem;white-space:pre-wrap;color:#34d399;">Ready...</div>
-            <button id="mig-close-btn" style="width:100%;margin-top:10px;padding:6px;background:transparent;color:#9ca3af;border:none;cursor:pointer;font-size:0.8rem;">Close</button>
+            <div id="mig-console" style="margin-top:15px;background:#0d0d0d;border:1px solid #222222;border-radius:8px;padding:10px;height:120px;overflow-y:auto;font-family:monospace;font-size:0.75rem;white-space:pre-wrap;color:#34d399;">Ready...</div>
+            <button id="mig-close-btn" style="width:100%;margin-top:10px;padding:6px;background:transparent;color:#888888;border:none;cursor:pointer;font-size:0.8rem;">Close</button>
         \`;
 
         document.body.appendChild(div);

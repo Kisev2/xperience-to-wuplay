@@ -18,7 +18,7 @@
 
     div.innerHTML = `
         <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience -> Wuplay Migrator</h3>
-        <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Import collections directly inside your session.</p>
+        <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Make sure Xperience addon is installed in Wuplay.</p>
         
         <div style="margin-bottom:12px;">
             <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">1. SELECT COLLECTION JSON</label>
