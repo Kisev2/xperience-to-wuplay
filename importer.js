@@ -222,17 +222,31 @@
             const existingHubs = await hubsResp.json();
 
             for (const col of collections) {
-                printLog(`Processing Hub: ${col.title}`);
+                let colTitle = col.title;
+                let dup = existingHubs.find(h => h.name.toLowerCase() === colTitle.toLowerCase());
 
-                const dup = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
+                // Check if duplicate is a built-in/system hub (typically non-numeric string IDs)
+                if (dup && isNaN(Number(dup.id))) {
+                    printLog(`  System hub clash detected for "${colTitle}". Renaming to avoid conflict...`, 'warn');
+                    if (colTitle.toLowerCase() === 'studios') {
+                        colTitle = 'Film Studios';
+                    } else {
+                        colTitle = `${colTitle} Custom`;
+                    }
+                    // Re-check for duplicates under the new name
+                    dup = existingHubs.find(h => h.name.toLowerCase() === colTitle.toLowerCase());
+                }
+
+                printLog(`Processing Hub: ${colTitle}`);
+
                 let hubId = null;
                 let existingSections = new Set();
                 let hubItems = [];
 
                 if (dup) {
-                    const confirmUpdate = confirm(`Hub "${col.title}" already exists.\n\nWould you like to UPDATE it (add missing sections)?\n\nOK = Update/Merge\nCancel = Choose other options`);
+                    const confirmUpdate = confirm(`Hub "${colTitle}" already exists.\n\nWould you like to UPDATE it (add missing sections)?\n\nOK = Update/Merge\nCancel = Choose other options`);
                     if (confirmUpdate) {
-                        printLog(`  Updating existing hub: ${col.title} (adding missing sections)...`);
+                        printLog(`  Updating existing hub: ${colTitle} (adding missing sections)...`);
                         hubId = dup.id;
                         
                         // Parse existing items (sections)
@@ -245,13 +259,13 @@
                             }
                         });
                     } else {
-                        const confirmReplace = confirm(`Would you like to completely REPLACE "${col.title}"?\n\nOK = Delete and Recreate\nCancel = Skip`);
+                        const confirmReplace = confirm(`Would you like to completely REPLACE "${colTitle}"?\n\nOK = Delete and Recreate\nCancel = Skip`);
                         if (confirmReplace) {
-                            printLog(`  Replacing existing hub: ${col.title}`, 'warn');
+                            printLog(`  Replacing existing hub: ${colTitle}`, 'warn');
                             await fetch(`${baseUrl}/hubs/${dup.id}`, { method: 'DELETE' });
                             await sleep(500);
                         } else {
-                            printLog(`  Skipped existing hub: ${col.title}`, 'warn');
+                            printLog(`  Skipped existing hub: ${colTitle}`, 'warn');
                             continue;
                         }
                     }
@@ -261,7 +275,7 @@
                     const chResp = await fetch(`${baseUrl}/hubs`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: col.title, detailViewType: "poster_rows", tileShape: "landscape" })
+                        body: JSON.stringify({ name: colTitle, detailViewType: "poster_rows", tileShape: "landscape" })
                     });
                     const hub = await chResp.json();
                     hubId = hub.id;
@@ -328,6 +342,9 @@
                         printLog(`    Checking hub details for layout ID...`);
                         try {
                             const hubDetailsResp = await fetch(`${baseUrl}/hubs/${hubId}`);
+                            if (!hubDetailsResp.ok) {
+                                throw new Error(`HTTP status ${hubDetailsResp.status}`);
+                            }
                             const hubDetails = await hubDetailsResp.json();
                             const items = hubDetails.customItems || hubDetails.items || [];
                             const matchedItem = items.find(i => String(i.id) === String(item.id) || String(i.slug) === String(item.id) || (i.name && i.name.toLowerCase() === folder.title.toLowerCase()));
