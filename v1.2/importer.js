@@ -379,7 +379,7 @@
                         const extraPayload = [];
                         if (meta.extra && Array.isArray(meta.extra)) {
                             meta.extra.forEach(ex => {
-                                const val = source[ex.name] !== undefined ? source[ex.name] : (ex.isRequired && ex.options ? ex.options[0] : null);
+                                const val = (source[ex.name] !== undefined && source[ex.name] !== null) ? source[ex.name] : (ex.isRequired && ex.options ? ex.options[0] : null);
                                 if (val !== null && val !== undefined) {
                                     extraPayload.push({ name: ex.name, value: String(val) });
                                 }
