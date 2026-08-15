@@ -17,7 +17,7 @@
     div.style.boxShadow = '0 10px 40px rgba(0,0,0,0.9)';
 
     div.innerHTML = `
-        <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience -> Wuplay Migrator</h3>
+        <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience → Wuplay v1.1</h3>
         <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Make sure Xperience addon is installed in Wuplay.</p>
         
         <div style="margin-bottom:12px;">
@@ -236,6 +236,26 @@
                         await sleep(500);
                     }
 
+                    if (!item.layoutId && item.layout && item.layout.id) {
+                        item.layoutId = item.layout.id;
+                    }
+                    if (!item.layoutId) {
+                        printLog(`    Checking hub details for layout ID...`);
+                        try {
+                            const hubDetailsResp = await fetch(`${baseUrl}/hubs/${hubId}`);
+                            const hubDetails = await hubDetailsResp.json();
+                            const items = hubDetails.customItems || hubDetails.items || [];
+                            const matchedItem = items.find(i => String(i.id) === String(item.id) || String(i.slug) === String(item.id));
+                            if (matchedItem && matchedItem.layoutId) {
+                                item.layoutId = matchedItem.layoutId;
+                            } else if (matchedItem && matchedItem.layout && matchedItem.layout.id) {
+                                item.layoutId = matchedItem.layout.id;
+                            }
+                        } catch (e) {
+                            printLog(`    Warning: Failed to fetch hub details: ${e.message}`, 'warn');
+                        }
+                    }
+
                     const seen = new Set();
                     const catalogsPayload = [];
                     (folder.catalogSources || []).forEach(source => {
@@ -244,6 +264,16 @@
                         seen.add(key);
 
                         const meta = catalogMap[key] || {};
+                        const extraPayload = [];
+                        if (meta.extra && Array.isArray(meta.extra)) {
+                            meta.extra.forEach(ex => {
+                                const val = source[ex.name] !== undefined ? source[ex.name] : (ex.isRequired && ex.options ? ex.options[0] : null);
+                                if (val !== null && val !== undefined) {
+                                    extraPayload.push({ name: ex.name, value: String(val) });
+                                }
+                            });
+                        }
+
                         catalogsPayload.push({
                             addonId,
                             catalogId: source.catalogId,
@@ -251,18 +281,27 @@
                             name: meta.name || source.catalogId,
                             transportUrl,
                             addonName: "Xperience",
-                            extra: meta.extra || [],
+                            extra: extraPayload,
                             genres: null
                         });
                     });
 
                     if (catalogsPayload.length > 0) {
-                        await fetch(`/configure/api/${profileKey}/layouts/${item.layoutId}/rows/addon-bulk`, {
+                        if (!item.layoutId) {
+                            printLog(`      ERROR: Cannot add catalogs, layoutId is undefined for section: ${folder.title}`, 'error');
+                            continue;
+                        }
+                        const bulkResp = await fetch(`/configure/api/${profileKey}/layouts/${item.layoutId}/rows/addon-bulk`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ catalogs: catalogsPayload })
                         });
-                        printLog(`      Added ${catalogsPayload.length} catalogs`);
+                        if (bulkResp.ok) {
+                            printLog(`      Added ${catalogsPayload.length} catalogs`);
+                        } else {
+                            const errText = await bulkResp.text();
+                            printLog(`      Failed to add catalogs: ${errText}`, 'error');
+                        }
                         await sleep(500);
                     }
                 }
