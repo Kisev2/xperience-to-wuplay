@@ -228,8 +228,16 @@
                 // Check if duplicate is a built-in/system hub (typically non-numeric string IDs)
                 if (dup && isNaN(Number(dup.id))) {
                     printLog(`  System hub clash detected for "${colTitle}". Renaming to avoid conflict...`, 'warn');
-                    if (colTitle.toLowerCase() === 'studios') {
-                        colTitle = 'Film Studios';
+                    const systemClashes = {
+                        'genres': 'Explore Genres',
+                        'decades': 'Explore Decades',
+                        'studios': 'Film Studios',
+                        'streaming services': 'Streaming',
+                        'movie collections': 'Cinematic Universes'
+                    };
+                    const lowerTitle = colTitle.toLowerCase();
+                    if (systemClashes[lowerTitle]) {
+                        colTitle = systemClashes[lowerTitle];
                     } else {
                         colTitle = `${colTitle} Custom`;
                     }
