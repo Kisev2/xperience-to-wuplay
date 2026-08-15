@@ -338,9 +338,6 @@
                     if (!item.layoutId && item.layout && item.layout.id) {
                         item.layoutId = item.layout.id;
                     }
-                    if (!item.layoutId && item.layout_id) {
-                        item.layoutId = item.layout_id;
-                    }
                     if (!item.layoutId) {
                         printLog(`    Checking hub details for layout ID...`);
                         try {
@@ -350,16 +347,12 @@
                             }
                             const hubDetails = await hubDetailsResp.json();
                             const items = hubDetails.customItems || hubDetails.items || [];
-                            const matchedItem = items.find(i => String(i.id) === String(item.id) || String(i.slug) === String(item.id) || (i.name && i.name.toLowerCase() === folder.title.toLowerCase()));
+                            const matchedItem = items.find(i => String(i.id) === String(item.id) || String(i.slug) === String(item.id));
                             
-                            if (matchedItem) {
-                                if (matchedItem.layoutId) {
-                                    item.layoutId = matchedItem.layoutId;
-                                } else if (matchedItem.layout) {
-                                    item.layoutId = typeof matchedItem.layout === 'object' ? matchedItem.layout.id : matchedItem.layout;
-                                } else if (matchedItem.layout_id) {
-                                    item.layoutId = matchedItem.layout_id;
-                                }
+                            if (matchedItem && matchedItem.layoutId) {
+                                item.layoutId = matchedItem.layoutId;
+                            } else if (matchedItem && matchedItem.layout && matchedItem.layout.id) {
+                                item.layoutId = matchedItem.layout.id;
                             } else {
                                 printLog(`      Debug: No section match found in hub details for ID ${item.id}. Available: ${items.map(i => i.name + '(' + (i.id || i.slug) + ')').join(', ')}`, 'warn');
                             }
@@ -379,7 +372,7 @@
                         const extraPayload = [];
                         if (meta.extra && Array.isArray(meta.extra)) {
                             meta.extra.forEach(ex => {
-                                const val = (source[ex.name] !== undefined && source[ex.name] !== null) ? source[ex.name] : (ex.isRequired && ex.options ? ex.options[0] : null);
+                                const val = source[ex.name] !== undefined ? source[ex.name] : (ex.isRequired && ex.options ? ex.options[0] : null);
                                 if (val !== null && val !== undefined) {
                                     extraPayload.push({ name: ex.name, value: String(val) });
                                 }
