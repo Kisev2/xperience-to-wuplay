@@ -223,27 +223,22 @@
 
             for (const col of collections) {
                 let colTitle = col.title;
-                let dup = existingHubs.find(h => h.name.toLowerCase() === colTitle.toLowerCase());
-
-                // Check if duplicate is a built-in/system hub (typically non-numeric string IDs)
-                if (dup && isNaN(Number(dup.id))) {
-                    printLog(`  System hub clash detected for "${colTitle}". Renaming to avoid conflict...`, 'warn');
-                    const systemClashes = {
-                        'genres': 'Explore Genres',
-                        'decades': 'Explore Decades',
-                        'studios': 'Film Studios',
-                        'streaming services': 'Streaming',
-                        'movie collections': 'Cinematic Universes'
-                    };
-                    const lowerTitle = colTitle.toLowerCase();
-                    if (systemClashes[lowerTitle]) {
-                        colTitle = systemClashes[lowerTitle];
-                    } else {
-                        colTitle = `${colTitle} Custom`;
-                    }
-                    // Re-check for duplicates under the new name
-                    dup = existingHubs.find(h => h.name.toLowerCase() === colTitle.toLowerCase());
+                
+                // Renaming clashing system hubs directly by name
+                const systemClashes = {
+                    'genres': 'Explore Genres',
+                    'decades': 'Explore Decades',
+                    'studios': 'Film Studios',
+                    'streaming services': 'Streaming',
+                    'movie collections': 'Cinematic Universes'
+                };
+                const lowerTitle = colTitle.toLowerCase();
+                if (systemClashes[lowerTitle]) {
+                    printLog(`  Prebuilt system hub name "${colTitle}" detected. Renaming to "${systemClashes[lowerTitle]}" to avoid clash...`, 'warn');
+                    colTitle = systemClashes[lowerTitle];
                 }
+
+                let dup = existingHubs.find(h => h.name.toLowerCase() === colTitle.toLowerCase());
 
                 printLog(`Processing Hub: ${colTitle}`);
 
