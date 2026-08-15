@@ -25,7 +25,7 @@
             <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
         </div>
 
-        <div style="margin-bottom:15px;display:flex;align-items:center;">
+        <div style="margin-bottom:15px;display:none;">
             <input type="checkbox" id="mig-dev-mode" style="margin-right:8px;width:16px;height:16px;cursor:pointer;">
             <label for="mig-dev-mode" style="font-size:0.8rem;font-weight:bold;color:#888888;margin-bottom:0;cursor:pointer;text-transform:uppercase;">Dev Mode (Dry Run/Simulation)</label>
         </div>
