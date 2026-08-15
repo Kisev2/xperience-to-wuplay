@@ -20,14 +20,14 @@
         <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience → Wuplay v1.2</h3>
         <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Make sure Xperience addon is installed in Wuplay.</p>
         
-        <div style="margin-bottom:12px;">
-            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">1. SELECT COLLECTION JSON</label>
+        <div style="margin-bottom:15px;">
+            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">SELECT COLLECTION JSON</label>
             <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
         </div>
 
-        <div style="margin-bottom:15px;">
-            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">2. SELECT MANIFEST JSON</label>
-            <input type="file" id="mig-man-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
+        <div style="margin-bottom:15px;display:flex;align-items:center;">
+            <input type="checkbox" id="mig-dev-mode" style="margin-right:8px;width:16px;height:16px;cursor:pointer;">
+            <label for="mig-dev-mode" style="font-size:0.8rem;font-weight:bold;color:#888888;margin-bottom:0;cursor:pointer;text-transform:uppercase;">Dev Mode (Dry Run/Simulation)</label>
         </div>
 
         <button id="mig-start-btn" style="width:100%;padding:12px;background:#ffffff;color:black;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">Start Import</button>
@@ -112,41 +112,88 @@
 
     startBtn.onclick = async () => {
         const colFile = div.querySelector('#mig-col-file').files[0];
-        const manFile = div.querySelector('#mig-man-file').files[0];
+        const devMode = div.querySelector('#mig-dev-mode').checked;
 
-        if (!colFile || !manFile) {
-            alert("Please select both JSON files first.");
+        if (!colFile) {
+            alert("Please select your Collection JSON file first.");
             return;
         }
 
         consoleEl.innerHTML = '';
-        printLog("Reading files...");
+        if (devMode) {
+            printLog("[DEV MODE] Running in Simulation/Dry Run Mode...", "warn");
+        }
+        printLog("Reading collection file...");
 
         try {
-            const collections = await new Promise((resolve, reject) => {
+            let collections = await new Promise((resolve, reject) => {
                 const r = new FileReader();
                 r.onload = e => resolve(JSON.parse(e.target.result));
                 r.onerror = reject;
                 r.readAsText(colFile);
             });
 
-            const manifest = await new Promise((resolve, reject) => {
-                const r = new FileReader();
-                r.onload = e => resolve(JSON.parse(e.target.result));
-                r.onerror = reject;
-                r.readAsText(manFile);
-            });
-
-            printLog(`Files loaded. ${collections.length} collections parsed.`);
+            // Auto-extract array if wrapped inside object, or throw error
+            if (collections && !Array.isArray(collections) && Array.isArray(collections.collections)) {
+                collections = collections.collections;
+            }
+            if (!Array.isArray(collections)) {
+                throw new Error("Invalid Collection JSON. Make sure you chose the collections file first.");
+            }
 
             const pathParts = window.location.pathname.split('/');
             const profileKey = pathParts[pathParts.length - 1] || 'your_profile_key';
             const baseUrl = `/configure/api/${profileKey}`;
 
-            const catalogMap = {};
-            (manifest.catalogs || []).forEach(cat => {
-                catalogMap[`${cat.id}:${cat.type}`] = { name: cat.name || cat.id, extra: cat.extra || [] };
-            });
+            // Mock fetch operations if Dev Mode is checked
+            const originalFetch = window.fetch;
+            if (devMode) {
+                window.fetch = async (url, options) => {
+                    const method = (options && options.method) || 'GET';
+                    
+                    // Simulate responses
+                    if (url.includes(baseUrl)) {
+                        // Check if it's hubs list vs root profile config
+                        if (url.endsWith('/hubs')) {
+                            if (method === 'POST') {
+                                const body = JSON.parse(options.body);
+                                return { ok: true, json: async () => ({ id: Math.floor(Math.random() * 100000), name: body.name }) };
+                            }
+                            return { 
+                                ok: true, 
+                                json: async () => [{ 
+                                    id: 9999, 
+                                    name: "Streaming", 
+                                    items: [
+                                        { name: "Netflix" },
+                                        { name: "Crunchyroll" }
+                                    ]
+                                }] 
+                            };
+                        }
+                        
+                        // Otherwise it's profile config
+                        return {
+                            ok: true,
+                            json: async () => ({ addons: [{ id: "app.xperience.mock", url: "https://mock/manifest.json" }] })
+                        };
+                    }
+                    if (url.includes('/items')) {
+                        if (method === 'POST') {
+                            const body = JSON.parse(options.body);
+                            return { ok: true, json: async () => ({ id: Math.floor(Math.random() * 100000), name: body.name, layoutId: Math.floor(Math.random() * 100000) }) };
+                        }
+                    }
+                    if (url.includes('manifest.json')) {
+                        return {
+                            ok: true,
+                            json: async () => ({ catalogs: [] })
+                        };
+                    }
+                    // Default ok response
+                    return { ok: true, json: async () => ({}) };
+                };
+            }
 
             printLog("Fetching addon config...");
             const profileResp = await fetch(baseUrl);
@@ -158,6 +205,19 @@
             const addonId = xperience.id;
             const transportUrl = xperience.url.replace('/manifest.json', '');
 
+            // Fetch manifest automatically from the installed addon URL
+            printLog("Fetching addon manifest automatically...");
+            const manifestResp = await fetch(xperience.url);
+            if (!manifestResp.ok) throw new Error("Failed to fetch addon manifest from " + xperience.url);
+            const manifest = await manifestResp.json();
+
+            const catalogMap = {};
+            (manifest.catalogs || []).forEach(cat => {
+                catalogMap[`${cat.id}:${cat.type}`] = { name: cat.name || cat.id, extra: cat.extra || [] };
+            });
+
+            printLog(`Addon manifest loaded. ${collections.length} collections parsed.`);
+
             const hubsResp = await fetch(`${baseUrl}/hubs`);
             const existingHubs = await hubsResp.json();
 
@@ -166,16 +226,34 @@
 
                 const dup = existingHubs.find(h => h.name.toLowerCase() === col.title.toLowerCase());
                 let hubId = null;
+                let existingSections = new Set();
+                let hubItems = [];
 
                 if (dup) {
-                    const confirmReplace = confirm(`Hub "${col.title}" already exists. Would you like to REPLACE it?\n\nOK = Delete and Recreate\nCancel = Skip`);
-                    if (confirmReplace) {
-                        printLog(`  Replacing existing hub: ${col.title}`, 'warn');
-                        await fetch(`${baseUrl}/hubs/${dup.id}`, { method: 'DELETE' });
-                        await sleep(500);
+                    const confirmUpdate = confirm(`Hub "${col.title}" already exists.\n\nWould you like to UPDATE it (add missing sections)?\n\nOK = Update/Merge\nCancel = Choose other options`);
+                    if (confirmUpdate) {
+                        printLog(`  Updating existing hub: ${col.title} (adding missing sections)...`);
+                        hubId = dup.id;
+                        
+                        // Parse existing items (sections)
+                        const sections = dup.customItems || dup.items || [];
+                        sections.forEach(s => {
+                            if (s.name) {
+                                existingSections.add(s.name.toLowerCase());
+                                // Keep track of existing items so we can update the list order
+                                hubItems.push({ id: s.slug || s.id, name: s.name });
+                            }
+                        });
                     } else {
-                        printLog(`  Skipped existing hub: ${col.title}`, 'warn');
-                        continue;
+                        const confirmReplace = confirm(`Would you like to completely REPLACE "${col.title}"?\n\nOK = Delete and Recreate\nCancel = Skip`);
+                        if (confirmReplace) {
+                            printLog(`  Replacing existing hub: ${col.title}`, 'warn');
+                            await fetch(`${baseUrl}/hubs/${dup.id}`, { method: 'DELETE' });
+                            await sleep(500);
+                        } else {
+                            printLog(`  Skipped existing hub: ${col.title}`, 'warn');
+                            continue;
+                        }
                     }
                 }
 
@@ -191,9 +269,13 @@
                     await sleep(500);
                 }
 
-                const hubItems = [];
-
                 for (const folder of (col.folders || [])) {
+                    // Skip if section already exists (Update mode)
+                    if (existingSections.has(folder.title.toLowerCase())) {
+                        printLog(`    Section: ${folder.title} -- already exists, skipping`);
+                        continue;
+                    }
+
                     printLog(`    Creating Section: ${folder.title}`);
                     const itemResp = await fetch(`${baseUrl}/hubs/${hubId}/items`, {
                         method: 'POST',
@@ -311,6 +393,10 @@
 
         } catch (err) {
             printLog("ERROR: " + err.message, "error");
+        } finally {
+            if (devMode) {
+                window.fetch = originalFetch;
+            }
         }
     };
 })();

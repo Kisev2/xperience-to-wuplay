@@ -20,14 +20,9 @@
         <h3 style="margin-top:0;margin-bottom:8px;font-size:1.2rem;color:#ffffff;">Xperience → Wuplay v1.2</h3>
         <p style="font-size:0.85rem;color:#888888;margin-bottom:15px;">Make sure Xperience addon is installed in Wuplay.</p>
         
-        <div style="margin-bottom:12px;">
-            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">1. SELECT COLLECTION JSON</label>
-            <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
-        </div>
-
         <div style="margin-bottom:15px;">
-            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">2. SELECT MANIFEST JSON</label>
-            <input type="file" id="mig-man-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
+            <label style="display:block;font-size:0.75rem;font-weight:bold;margin-bottom:4px;color:#888888;">SELECT COLLECTION JSON</label>
+            <input type="file" id="mig-col-file" accept=".json" style="width:100%;color:#fff;background:#0d0d0d;border:1px solid #222222;padding:6px;border-radius:6px;">
         </div>
 
         <div style="margin-bottom:15px;display:flex;align-items:center;">
@@ -117,11 +112,10 @@
 
     startBtn.onclick = async () => {
         const colFile = div.querySelector('#mig-col-file').files[0];
-        const manFile = div.querySelector('#mig-man-file').files[0];
         const devMode = div.querySelector('#mig-dev-mode').checked;
 
-        if (!colFile || !manFile) {
-            alert("Please select both JSON files first.");
+        if (!colFile) {
+            alert("Please select your Collection JSON file first.");
             return;
         }
 
@@ -129,7 +123,7 @@
         if (devMode) {
             printLog("[DEV MODE] Running in Simulation/Dry Run Mode...", "warn");
         }
-        printLog("Reading files...");
+        printLog("Reading collection file...");
 
         try {
             let collections = await new Promise((resolve, reject) => {
@@ -146,15 +140,6 @@
             if (!Array.isArray(collections)) {
                 throw new Error("Invalid Collection JSON. Make sure you chose the collections file first.");
             }
-
-            const manifest = await new Promise((resolve, reject) => {
-                const r = new FileReader();
-                r.onload = e => resolve(JSON.parse(e.target.result));
-                r.onerror = reject;
-                r.readAsText(manFile);
-            });
-
-            printLog(`Files loaded. ${collections.length} collections parsed.`);
 
             const pathParts = window.location.pathname.split('/');
             const profileKey = pathParts[pathParts.length - 1] || 'your_profile_key';
@@ -199,15 +184,16 @@
                             return { ok: true, json: async () => ({ id: Math.floor(Math.random() * 100000), name: body.name, layoutId: Math.floor(Math.random() * 100000) }) };
                         }
                     }
+                    if (url.includes('manifest.json')) {
+                        return {
+                            ok: true,
+                            json: async () => ({ catalogs: [] })
+                        };
+                    }
                     // Default ok response
                     return { ok: true, json: async () => ({}) };
                 };
             }
-
-            const catalogMap = {};
-            (manifest.catalogs || []).forEach(cat => {
-                catalogMap[`${cat.id}:${cat.type}`] = { name: cat.name || cat.id, extra: cat.extra || [] };
-            });
 
             printLog("Fetching addon config...");
             const profileResp = await fetch(baseUrl);
@@ -218,6 +204,19 @@
 
             const addonId = xperience.id;
             const transportUrl = xperience.url.replace('/manifest.json', '');
+
+            // Fetch manifest automatically from the installed addon URL
+            printLog("Fetching addon manifest automatically...");
+            const manifestResp = await fetch(xperience.url);
+            if (!manifestResp.ok) throw new Error("Failed to fetch addon manifest from " + xperience.url);
+            const manifest = await manifestResp.json();
+
+            const catalogMap = {};
+            (manifest.catalogs || []).forEach(cat => {
+                catalogMap[`${cat.id}:${cat.type}`] = { name: cat.name || cat.id, extra: cat.extra || [] };
+            });
+
+            printLog(`Addon manifest loaded. ${collections.length} collections parsed.`);
 
             const hubsResp = await fetch(`${baseUrl}/hubs`);
             const existingHubs = await hubsResp.json();

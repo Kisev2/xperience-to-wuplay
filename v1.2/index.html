@@ -59,10 +59,45 @@
             margin-bottom: 25px;
         }
 
+        .tabs {
+            display: flex;
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: #000000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .section-title {
             font-size: 1rem;
             font-weight: 600;
-            margin-top: 20px;
             margin-bottom: 10px;
             color: var(--text-main);
         }
@@ -154,32 +189,44 @@
     <h1>Xperience → Wuplay v1.2</h1>
     <div class="subtitle">Migrate collections directly in your browser — no cookies needed!</div>
 
-    <div class="section-title">Option 1: Bookmarklet (Auto-Redirect Enabled)</div>
-    <a class="bookmark-btn" id="helperLink" href="#">Migrate to Wuplay</a>
-    <div class="instructions">
-        <p style="font-weight: 600; margin-bottom: 8px;">Easy Setup Instructions:</p>
-        <ol>
-            <li><b>Tap/Hold and Copy</b> the "Migrate to Wuplay" button link above (or drag it to your PC's Bookmarks bar).</li>
-            <li>Add this page to your Bookmarks (rename it <b>"Migrate to Wuplay v1.2"</b> and replace the link with the copied address).</li>
-            <li>Click the bookmark $\rightarrow$ it will automatically redirect you to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a>.</li>
-            <li>Once on the Wuplay configuration page, click/run the **same bookmark** again to launch the UI!</li>
-        </ol>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('bookmarklet')">Bookmarklet (Easiest)</button>
+        <button class="tab-btn" onclick="switchTab('console')">Console Code (Alternative)</button>
     </div>
 
-    <div class="code-box" id="codeBox">javascript:(function(){/*code loaded here*/})()</div>
-    <button class="copy-btn" id="copyBtn" style="margin-bottom: 25px;">Copy Bookmarklet Code</button>
+    <!-- TAB 1: BOOKMARKLET -->
+    <div id="tab-bookmarklet" class="tab-content active">
+        <div class="section-title">Drag & Drop or Save Bookmarklet</div>
+        <a class="bookmark-btn" id="helperLink" href="#">Migrate to Wuplay</a>
+        
+        <div class="instructions">
+            <p style="font-weight: 600; margin-bottom: 8px;">Quick Instructions:</p>
+            <ol>
+                <li><b>Tap/Hold and Copy</b> the button URL above (or drag it to your bookmarks bar if on PC).</li>
+                <li>Add any page as a Bookmark, edit it, rename it to <b>"Migrate to Wuplay"</b>, and **paste** the link into the URL field.</li>
+                <li>Click the bookmark $\rightarrow$ it will redirect you to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a>.</li>
+                <li>Once inside Wuplay, click the **same bookmark** again to launch the migrator overlay!</li>
+            </ol>
+        </div>
 
-    <div class="section-title">Option 2: Browser Console (Alternative for PC)</div>
-    <div class="instructions">
-        If the bookmarklet doesn't trigger due to browser security blocks:
-        <ol>
-            <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a> on your PC.</li>
-            <li>Press <b>F12</b> and open the <b>Console</b> tab.</li>
-            <li>Click the button below to copy the console version.</li>
-            <li>Paste it into the console and press <b>Enter</b>.</li>
-        </ol>
+        <div class="code-box" id="codeBox">javascript:(function(){/*code loaded here*/})()</div>
+        <button class="copy-btn" id="copyBtn">Copy Bookmarklet Code</button>
     </div>
-    <button class="copy-btn" id="copyConsoleBtn">Copy Console Code</button>
+
+    <!-- TAB 2: BROWSER CONSOLE -->
+    <div id="tab-console" class="tab-content">
+        <div class="section-title">Run via PC Console</div>
+        <div class="instructions">
+            Use this if the bookmarklet is blocked by your browser:
+            <ol>
+                <li>Go to <a href="https://config.wuplay.app" target="_blank" style="color: #818cf8; text-decoration: none;">config.wuplay.app</a>.</li>
+                <li>Press <b>F12</b> (or Right-click $\rightarrow$ Inspect) and open the <b>Console</b> tab.</li>
+                <li>Click the button below to copy the console version.</li>
+                <li>Paste it in the console and hit <b>Enter</b>.</li>
+            </ol>
+        </div>
+        <button class="copy-btn" id="copyConsoleBtn">Copy Console Code</button>
+    </div>
 
     <div class="footer">
         Concept by Kisev2, created with the help of AI<br>
@@ -188,6 +235,19 @@
 </div>
 
 <script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        if (tabId === 'bookmarklet') {
+            document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+            document.getElementById('tab-bookmarklet').classList.add('active');
+        } else {
+            document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+            document.getElementById('tab-console').classList.add('active');
+        }
+    }
+
     const bookmarkletCode = "javascript:(function(){if(window.location.hostname.indexOf('wuplay.app')!==-1){var s=document.createElement('script');s.src='https://kisev2.github.io/xperience-to-wuplay/v1.2/importer.js?v='+Math.random();document.body.appendChild(s);}else{alert('Redirecting to Wuplay! Once the page loads, open/click this bookmark again to start.');window.location.href='https://config.wuplay.app';}})()";
     
     document.getElementById('helperLink').href = bookmarkletCode;
